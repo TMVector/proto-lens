@@ -88,7 +88,7 @@ generateModule modName imports syntaxType definitions importedEnv
             ++ map importReexported
                 [ "Data.ProtoLens", "Data.ProtoLens.Message.Enum"
                 , "Lens.Family2", "Lens.Family2.Unchecked", "Data.Default.Class"
-                , "Data.Text",  "Data.Map" , "Data.ByteString"
+                , "Data.Text",  "Data.Map" , "Data.ByteString", "Data.Vector"
                 ]
             ++ map importSimple imports)
           (concatMap generateDecls (Map.elems definitions)
@@ -402,10 +402,10 @@ lensInfo syntaxType env f = case fd ^. label of
                        }]
         -- data Foo = Foo { _Foo_bar :: [Bar] }
         -- type instance Field "bar" Foo = [Bar]
-        | otherwise -> LensInfo listType
+        | otherwise -> LensInfo vectorType
                   [FieldInstanceInfo
                       { fieldSymbol = baseName
-                      , fieldTypeInstance = listType
+                      , fieldTypeInstance = vectorType
                       , fieldAccessor = rawAccessor
                       }]
     -- data Foo = Foo { _Foo_bar :: Maybe Bar }
@@ -427,7 +427,8 @@ lensInfo syntaxType env f = case fd ^. label of
     baseName = overloadedField f
     fd = fieldDescriptor f
     baseType = hsFieldType env fd
-    listType = TyList baseType
+    listType = TyList () baseType
+    vectorType = "Data.Vector.Vector" @@ baseType
     maybeType = "Prelude.Maybe" @@ baseType
     maybeName = "maybe'" ++ baseName
     maybeAccessor = "Prelude.." @@ fromString maybeName
@@ -483,7 +484,7 @@ hsFieldDefault syntaxType env fd
               | otherwise -> "Prelude.Nothing"
           FieldDescriptorProto'LABEL_REPEATED
               | Just _ <- getMapFields env fd -> "Data.Map.empty"
-              | otherwise -> List []
+              | otherwise -> "Data.Vector.empty"
           -- TODO: More sensible initialization of required fields.
           FieldDescriptorProto'LABEL_REQUIRED -> hsFieldValueDefault env fd
 
@@ -630,7 +631,7 @@ fieldAccessorExpr syntaxType env f = accessorCon @@ Var (UnQual hsFieldName)
                   -> "Data.ProtoLens.MapField"
                          @@ fromString (overloadedField k)
                          @@ fromString (overloadedField v)
-              | otherwise -> "Data.ProtoLens.RepeatedField"
+              | otherwise -> "Data.ProtoLens.RepeatedField'"
                   @@ if fd ^. options.packed
                         then "Data.ProtoLens.Packed"
                         else "Data.ProtoLens.Unpacked"
