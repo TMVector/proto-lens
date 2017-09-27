@@ -1,18 +1,12 @@
-resolver: lts-7.4
+resolver: lts-9.0
 packages:
+- lens-labels
 - proto-lens
 - proto-lens-protoc
+- proto-lens-protobuf-types
 - proto-lens-arbitrary
 - proto-lens-combinators
 - proto-lens-optparse
+- proto-lens-tests-dep
 - proto-lens-tests
 - proto-lens-benchmarks
-
-# Allow our custom Setup.hs scripts to import Data.ProtoLens.Setup from the version of
-# `proto-lens-protoc` in stack's local DB.  This makes things simpler when developing
-# `proto-lens-proto` and `proto-lens-tests` at the same time.
-#
-# For more details, see:
-# http://docs.haskellstack.org/en/latest/yaml_configuration/#explicit-setup-deps
-explicit-setup-deps:
-  "*": true

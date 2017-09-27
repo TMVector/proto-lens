@@ -6,6 +6,7 @@
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 -- | A benchmark to measure the overhead of including a lot of unused fields
 -- in a proto message. Because protos are modeled as Haskell records, decoding
@@ -22,6 +23,7 @@ import Lens.Family2 ((&), (.~))
 import Data.Int (Int32)
 import Data.ProtoLens.Message (def)
 import Proto.UnusedFields
+import Proto.UnusedFields'Fields
 
 -- These instances are required by Criterion to benchmark proto decoding.
 deriving instance Generic Foo
@@ -47,4 +49,5 @@ benchmaker size =
     , protoBenchmark "with-unused" (populateFooWithUnusedFields size 5)
     ]
 
+main :: IO ()
 main = benchmarkMain defaultNumInt32s benchmaker

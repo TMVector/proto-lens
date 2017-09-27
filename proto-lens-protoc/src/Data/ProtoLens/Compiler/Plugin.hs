@@ -22,16 +22,17 @@ import Data.List (foldl', intercalate)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map, unions, (!))
 import Data.Monoid ((<>))
+import Data.String (fromString)
 import qualified Data.Text as T
 import Data.Text (Text)
-import Language.Haskell.Exts.Syntax (ModuleName(..), Name(..), QName(..))
 import Lens.Family2
-import Bootstrap.Proto.Google.Protobuf.Descriptor
-    (FileDescriptorProto, name, dependency, publicDependency)
+import Proto.Google.Protobuf.Descriptor (FileDescriptorProto)
+import Proto.Google.Protobuf.Descriptor'Fields (name, dependency, publicDependency)
 import System.FilePath (dropExtension, splitDirectories)
 
 
 import Data.ProtoLens.Compiler.Definitions
+import Data.ProtoLens.Compiler.Combinators (ModuleName, Name, QName)
 
 -- | The filename of an input .proto file.
 type ProtoFileName = Text
@@ -84,25 +85,23 @@ outputFilePath n = T.replace "." "/" (T.pack n) <> ".hs"
 
 -- | Get the Haskell 'ModuleName' corresponding to a given .proto file.
 moduleName :: Text -> FileDescriptorProto -> ModuleName
-moduleName modulePrefix fd = ModuleName (moduleNameStr modulePrefix fd)
+moduleName modulePrefix fd
+      = fromString $ moduleNameStr (T.unpack modulePrefix) (T.unpack $ fd ^. name)
 
 -- | Get the Haskell module name corresponding to a given .proto file.
-moduleNameStr :: Text -> FileDescriptorProto -> String
-moduleNameStr modulePrefix fd = fixModuleName rawModuleName
+moduleNameStr :: String -> FilePath -> String
+moduleNameStr prefix path = fixModuleName rawModuleName
   where
-    path = fd ^. name
-    prefix
-        | T.null modulePrefix = "Proto"
-        | otherwise = modulePrefix
     fixModuleName "" = ""
     -- Characters allowed in Bazel filenames but not in module names:
     fixModuleName ('.':c:cs) = '.' : toUpper c : fixModuleName cs
     fixModuleName ('_':c:cs) = toUpper c : fixModuleName cs
     fixModuleName ('-':c:cs) = toUpper c : fixModuleName cs
     fixModuleName (c:cs) = c : fixModuleName cs
-    rawModuleName = intercalate "." $ (T.unpack prefix :)
-                        $ splitDirectories $ dropExtension
-                        $ T.unpack path
+    rawModuleName = intercalate "."
+                        . (prefix :)
+                        . splitDirectories $ dropExtension
+                        $ path
 
 -- | Given a list of .proto files (topologically sorted), determine which
 -- files' definitions are exported by which files.

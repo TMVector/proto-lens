@@ -9,12 +9,12 @@
 {-# LANGUAGE RankNTypes #-}
 -- | An Arbitrary instance for protocol buffer Messages to use with QuickCheck.
 module Data.ProtoLens.Arbitrary
-    ( ArbitraryMessage(..),
+    ( ArbitraryMessage(..)
+    , arbitraryMessage
     ) where
 
 import Data.ProtoLens.Message
 
-import Control.Applicative ((<$>), pure)
 import Control.Arrow ((&&&))
 import Control.Monad (foldM)
 import qualified Data.ByteString as BS
@@ -39,9 +39,7 @@ instance Message a => Arbitrary (ArbitraryMessage a) where
     shrink (ArbitraryMessage a) = ArbitraryMessage <$> shrinkMessage a
 
 arbitraryMessage :: Message a => Gen a
-arbitraryMessage = foldM (flip arbitraryField) def fields
-  where
-    fields = M.elems (fieldsByTag descriptor)
+arbitraryMessage = foldM (flip arbitraryField) def allFields
 
 -- | Imitation of the (Arbitrary a => Arbitrary (Maybe a)) instance from
 -- QuickCheck.
@@ -69,8 +67,8 @@ arbitraryField (FieldDescriptor _ ftd fa) = case fa of
 
 arbitraryFieldValue :: FieldTypeDescriptor value -> Gen value
 arbitraryFieldValue ftd = case ftd of
-    MessageField -> unArbitraryMessage <$> arbitrary
-    GroupField -> unArbitraryMessage <$> arbitrary
+    MessageField -> arbitraryMessage
+    GroupField -> arbitraryMessage
     -- For enum fields, all we know is that the value is an instance of
     -- MessageEnum, meaning we can only use fromEnum, toEnum, or maybeToEnum. So
     -- we must rely on the instance of Arbitrary for Int and filter out only the
@@ -98,9 +96,7 @@ arbitraryFieldValue ftd = case ftd of
 -- | Shrink each field individually and append all shrinks together into
 -- a single list.
 shrinkMessage :: Message a => a -> [a]
-shrinkMessage msg = concatMap (`shrinkField` msg) fields
-  where
-    fields = M.elems (fieldsByTag descriptor)
+shrinkMessage msg = concatMap (`shrinkField` msg) allFields
 
 shrinkMaybe :: (a -> [a]) -> Maybe a -> [Maybe a]
 shrinkMaybe f (Just v) = Nothing : (Just <$> f v)
@@ -126,7 +122,7 @@ shrinkField (FieldDescriptor _ ftd fa) = case fa of
 
 shrinkFieldValue :: FieldTypeDescriptor value -> value -> [value]
 shrinkFieldValue ftd = case ftd of
-    MessageField -> map unArbitraryMessage . shrink . ArbitraryMessage
+    MessageField -> shrinkMessage
     GroupField -> map unArbitraryMessage . shrink . ArbitraryMessage
     -- Shrink to the 0-equivalent Enum value if it's both a valid Enum value
     -- and the value isn't already 0.
