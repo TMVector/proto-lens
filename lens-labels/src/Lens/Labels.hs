@@ -33,12 +33,10 @@ module Lens.Labels (
     (&),
     (Category..),
     Lens,
-    Lens',
     -- * HasLens
     HasLens(..),
     Proxy#,
     proxy#,
-    HasLens'(..),
     -- * Setters
     ASetter,
     (.~),
@@ -54,54 +52,44 @@ module Lens.Labels (
 
 import qualified Control.Category as Category
 import GHC.Prim (Proxy#, proxy#)
+#if __GLASGOW_HASKELL__ >= 800
 import GHC.OverloadedLabels (IsLabel(..))
+#endif
 import GHC.TypeLits (Symbol)
 
 import Data.Function ((&))
+#if __GLASGOW_HASKELL__ >= 800
 import Data.Functor.Const (Const(..))
+#else
+import Control.Applicative (Const(..))
+#endif
 import Data.Functor.Identity(Identity(..))
 
 
 -- | A newtype for defining lenses.  Can be composed using
--- '(Control.Category..)', which is exported from this module.
+-- `(Control.Category..)` (also exported from this module).
 newtype LensFn a b = LensFn {runLens :: a -> b}
                         deriving Category.Category
 
 type LensLike f s t a b = LensFn (a -> f b) (s -> f t)
 type LensLike' f s a = LensLike f s s a a
 type Lens s t a b = forall f . Functor f => LensLike f s t a b
-type Lens' s a = Lens s s a a
 
 -- | A type class for lens fields.
-class HasLens f s t (x :: Symbol) a b
+class HasLens (x :: Symbol) f s t a b
         | x s -> a, x t -> b, x s b -> t, x t a -> s where
     lensOf :: Proxy# x -> (a -> f b) -> s -> f t
 
+#if __GLASGOW_HASKELL__ >= 800
 instance
-    (p ~ (a -> f b), q ~ (s -> f t), HasLens f s t x a b)
+    (p ~ (a -> f b), q ~ (s -> f t), HasLens x f s t a b)
     => IsLabel x (LensFn p q) where
 #if __GLASGOW_HASKELL__ >= 802
     fromLabel = LensFn $ lensOf (proxy# :: Proxy# x)
 #else
     fromLabel p = LensFn $ lensOf p
 #endif
-
--- | A type class for lens fields of monomorphic types (i.e., where the lens
--- doesn't change the outer type).
---
--- This class can be used to simplify instance declarations and type
--- errors, by "forwarding" 'HasLens' to simpler instances.  For example:
---
--- @
---     instance (HasLens' f Foo x a, a ~ b) => HasLens f Foo Foo x a b where
---         where lensOf = lensOf'
---     instance Functor f => HasLens' f Foo "a" Int where ...
---     instance Functor f => HasLens' f Foo "b" Double where ...
---     instance Functor f => HasLens' f Foo "c" [Float]  where ...
---     ...
--- @
-class HasLens f s s x a a => HasLens' f s x a | x s -> a where
-    lensOf' :: Proxy# x -> (a -> f a) -> s -> f s
+#endif
 
 type ASetter s t a b = LensLike Identity s t a b
 
@@ -119,10 +107,8 @@ infixr 4 %~
 
 type Getting r s t a b = LensLike (Const r) s t a b
 
-(^.) :: s -> Getting a s t a b -> a
+(^.), view :: s -> Getting a s t a b -> a
 s ^. f = getConst $ runLens f Const s
-
-view :: Getting a s t a b -> s -> a
-view = flip (^.)
+view = (^.)
 
 infixl 8 ^.

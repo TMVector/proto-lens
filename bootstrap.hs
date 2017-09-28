@@ -15,7 +15,7 @@ import System.Process (callProcess, readProcess)
 
 protoRoot = "google/protobuf/src"
 protoc = "protoc"
-bootstrapModuleRoot = "proto-lens/src"
+bootstrapModuleRoot = "proto-lens-descriptors/src"
 useBootstrappingYaml = "--stack-yaml=stack-bootstrap.yaml"
 
 main = do

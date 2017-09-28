@@ -6,18 +6,14 @@
 
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternGuards #-}
 {-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE TypeApplications #-}
 -- | Datatypes for reflection of protocol buffer messages.
 module Data.ProtoLens.Message (
     -- * Reflection of Messages
     Message(..),
     Tag(..),
-    allFields,
+    MessageDescriptor(..),
     FieldDescriptor(..),
     fieldDescriptorName,
     isRequired,
@@ -30,22 +26,10 @@ module Data.ProtoLens.Message (
     -- * Building protocol buffers
     Default(..),
     build,
-    -- * Proto registries
-    Registry,
-    register,
-    lookupRegistered,
-    SomeMessageType(..),
-    -- * Any messages
-    matchAnyMessage,
-    AnyMessageDescriptor(..),
     -- * Utilities for constructing protocol buffer lenses
     maybeLens,
     -- * Internal utilities for parsing protocol buffers
     reverseRepeatedFields,
-    -- * Unknown fields
-    FieldSet,
-    TaggedValue(..),
-    discardUnknownFields,
     ) where
 
 import qualified Data.ByteString as B
@@ -54,41 +38,37 @@ import Data.Int
 import qualified Data.Map as Map
 import Data.Map (Map)
 import Data.Maybe (fromMaybe)
-import Data.Proxy (Proxy(..))
 import qualified Data.Text as T
 import Data.Word
-import Lens.Family2 (Lens', over, set)
+import Lens.Family2 (Lens', over)
 import Lens.Family2.Unchecked (lens)
-
-import Data.ProtoLens.Encoding.Wire
-    ( Tag(..)
-    , TaggedValue(..)
-    )
 
 -- | Every protocol buffer is an instance of 'Message'.  This class enables
 -- serialization by providing reflection of all of the fields that may be used
 -- by this type.
 class Default msg => Message msg where
-    -- | A unique identifier for this type, of the format
-    -- @"packagename.messagename"@.
-    messageName :: Proxy msg -> T.Text
-    -- | The fields of the proto, indexed by their (integer) tag.
-    fieldsByTag :: Map Tag (FieldDescriptor msg)
-    -- | This map is keyed by the name of the field used for text format protos.
-    -- This is just the field name for every field except for group fields,
-    -- which use their Message type name in text protos instead of their
-    -- field name. For example, "optional group Foo" has the field name "foo"
-    -- but in this map it is stored with the key "Foo".
-    fieldsByTextFormatName :: Map String (FieldDescriptor msg)
-    fieldsByTextFormatName =
-        Map.fromList [(n, f) | f@(FieldDescriptor n _ _) <- allFields]
-    -- | Access the unknown fields of a Message.
-    unknownFields :: Lens' msg FieldSet
+    descriptor :: MessageDescriptor msg
 
-allFields :: Message msg => [FieldDescriptor msg]
-allFields = Map.elems fieldsByTag
+-- | The description of a particular protocol buffer message type.
+data MessageDescriptor msg = MessageDescriptor
+    {  messageName :: T.Text
+      -- ^ A unique identifier for this type, of the format
+      -- @"packagename.messagename"@.
+    , fieldsByTag :: Map Tag (FieldDescriptor msg)
+      -- ^ The fields of the proto, indexed by their (integer) tag.
+    , fieldsByTextFormatName :: Map String (FieldDescriptor msg)
+      -- ^ This map is keyed by the name of the field used for text format protos.
+      -- This is just the field name for every field except for group fields,
+      -- which use their Message type name in text protos instead of their
+      -- field name. For example, "optional group Foo" has the field name "foo"
+      -- but in this map it is stored with the key "Foo".
+    }
 
-type FieldSet = [TaggedValue]
+-- | A tag that identifies a particular field of the message when converting
+-- to/from the wire format.
+newtype Tag = Tag { unTag :: Int}
+    deriving (Show, Eq, Ord, Num)
+
 
 -- | A description of a specific field of a protocol buffer.
 --
@@ -198,29 +178,12 @@ data FieldTypeDescriptor value where
 
 deriving instance Show (FieldTypeDescriptor value)
 
-matchAnyMessage :: forall value . FieldTypeDescriptor value -> Maybe (AnyMessageDescriptor value)
-matchAnyMessage MessageField
-    | messageName (Proxy @value) == "google.protobuf.Any"
-    , Just (FieldDescriptor _ StringField (PlainField Optional typeUrlLens))
-        <- Map.lookup 1 (fieldsByTag @value)
-    , Just (FieldDescriptor _ BytesField (PlainField Optional valueLens))
-        <- Map.lookup 2 (fieldsByTag @value)
-        = Just $ AnyMessageDescriptor typeUrlLens valueLens
-matchAnyMessage _ = Nothing
-
-data AnyMessageDescriptor msg
-    = AnyMessageDescriptor
-        { anyTypeUrlLens :: Lens' msg T.Text
-        , anyValueLens :: Lens' msg B.ByteString
-        }
-
 -- | A class for protocol buffer enums that enables safe decoding.
 class (Enum a, Bounded a) => MessageEnum a where
     -- | Convert the given 'Int' to an enum value.  Returns 'Nothing' if
     -- no corresponding value was defined in the .proto file.
     maybeToEnum :: Int -> Maybe a
-    -- | Get the name of this enum as defined in the .proto file.  Used
-    -- for the human-readable output in @Data.ProtoLens.TextFormat@.
+    -- | Get the name of this enum as defined in the .proto file.
     showEnum :: a -> String
     -- | Convert the given 'String' to an enum value. Returns 'Nothing' if
     -- no corresponding value was defined in the .proto file.
@@ -268,32 +231,3 @@ reverseRepeatedFields fields x0
     reverseListField x (FieldDescriptor _ _ (RepeatedField _ f))
         = over f reverse x
     reverseListField x _ = x
-
--- | A set of known message types. Can help encode/decode protobufs containing
--- @Data.ProtoLens.Any@ values in a more human-readable text format.
---
--- Registries can be combined using their 'Monoid' instance.
---
--- See the @withRegistry@ functions in 'Data.ProtoLens.TextFormat'
-newtype Registry = Registry (Map.Map T.Text SomeMessageType)
-    deriving Monoid
-
--- | Build a 'Registry' containing a single proto type.
---
---   Example:
--- > register (Proxy :: Proxy Proto.My.Proto.Type)
-register :: forall msg . Message msg => Proxy msg -> Registry
-register p = Registry $ Map.singleton (messageName (Proxy @msg)) (SomeMessageType p)
-
--- | Look up a message type by name (e.g.,
--- @"type.googleapis.com/google.protobuf.FloatValue"@). The URL corresponds to
--- the field @google.protobuf.Any.type_url@.
-lookupRegistered :: T.Text -> Registry -> Maybe SomeMessageType
-lookupRegistered n (Registry m) = Map.lookup (snd $ T.breakOnEnd "/" n) m
-
-data SomeMessageType where
-    SomeMessageType :: Message msg => Proxy msg -> SomeMessageType
-
--- TODO: recursively
-discardUnknownFields :: Message msg => msg -> msg
-discardUnknownFields = set unknownFields []

@@ -10,9 +10,7 @@ module Data.ProtoLens.TestUtil(
     Test,
     serializeTo,
     deserializeFrom,
-    renderIndenting,
     readFrom,
-    readFromWithRegistry,
     Data(..),
     tagged,
     varInt,
@@ -71,17 +69,14 @@ testMain = defaultMain
 serializeTo :: (Show a, Eq a, Message a)
             => String -> a -> Doc -> Builder.Builder -> Test
 serializeTo name x text bs = testCase name $ do
-    let bs' = toStrictByteString bs
+    let bs' = L.toStrict $ Builder.toLazyByteString bs
     bs' @=? encodeMessage x
     x @=? decodeMessageOrDie bs'
     let text' = show text
     -- For consistency in the tests, make them put each field and submessage on
     -- a separate line.
-    text' @=? renderIndenting (pprintMessage x)
+    text' @=? renderStyle style {lineLength = 1} (pprintMessage x)
     x @=? readMessageOrDie (LT.pack text')
-
-renderIndenting :: Doc -> String
-renderIndenting = renderStyle style { lineLength = 1 }
 
 deserializeFrom :: (Show a, Eq a, Message a)
                 => String -> Maybe a -> Builder.Builder -> Test
@@ -91,7 +86,7 @@ deserializeFrom name x bs = testCase name $ case x of
     Nothing -> assertBool ("Expected failure, found " ++ show y) $ isLeft y
     Just x' -> Right x' @=? y
   where
-    y = decodeMessage $ toStrictByteString bs
+    y = decodeMessage $ L.toStrict $ Builder.toLazyByteString bs
 
 type MessageProperty a = ArbitraryMessage a -> Bool
 
@@ -113,18 +108,14 @@ roundTripTest name = TypedTest $ testGroup name
     , testProperty "text" (textRoundTripProperty :: MessageProperty a)
     ]
 
-readFromWithRegistry :: (Show a, Eq a, Message a)
-                     => Registry -> String -> Maybe a -> LT.Text -> Test
-readFromWithRegistry reg name x text = testCase name $ case x of
+readFrom :: (Show a, Eq a, Message a)
+         => String -> Maybe a -> LT.Text -> Test
+readFrom name x text = testCase name $ case x of
     -- Check whether or not it failed without worrying about the exact error
     -- message.
     Nothing -> assertBool ("Expected failure, found " ++ show y) $ isLeft y
     Just x' -> Right x' @=? y
-  where y = readMessageWithRegistry reg text
-
-readFrom :: (Show a, Eq a, Message a)
-         => String -> Maybe a -> LT.Text -> Test
-readFrom = readFromWithRegistry mempty
+  where y = readMessage text
 
 varInt :: Word64 -> Builder.Builder
 varInt n

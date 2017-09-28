@@ -72,28 +72,15 @@ patSynSig n t = Syntax.PatSynSig () n Nothing Nothing Nothing t
 patSyn :: Pat -> Pat -> Decl
 patSyn p1 p2 = Syntax.PatSyn () p1 p2 Syntax.ImplicitBidirectional
 
-dataDecl :: Name -> [ConDecl] -> Deriving -> Decl
+dataDecl :: Name -> [ConDecl] -> [QName] -> Decl
 dataDecl name conDecls derives
     = Syntax.DataDecl () (Syntax.DataType ()) Nothing
         (Syntax.DHead () name)
             [Syntax.QualConDecl () Nothing Nothing q | q <- conDecls]
-        $ Just derives
-
-newtypeDecl :: Name -> Type -> Deriving -> Decl
-newtypeDecl name wrappedType derives
-    = Syntax.DataDecl () (Syntax.NewType ()) Nothing
-        (Syntax.DHead () name)
-            [Syntax.QualConDecl () Nothing Nothing
-                $ Syntax.ConDecl () name [wrappedType]]
-        $ Just derives
-
-type Deriving = Syntax.Deriving ()
-
-deriving' :: [QName] -> Deriving
-deriving' classes = Syntax.Deriving ()
-                      [ Syntax.IRule () Nothing Nothing (Syntax.IHCon () c)
-                      | c <- classes
-                      ]
+        $ Just $ Syntax.Deriving ()
+            [ Syntax.IRule () Nothing Nothing (Syntax.IHCon () c)
+            | c <- derives
+            ]
 
 funBind :: [Match] -> Decl
 funBind = Syntax.FunBind ()
@@ -163,8 +150,6 @@ type InstHead = Syntax.InstHead ()
 ihApp :: InstHead -> [Type] -> InstHead
 ihApp = foldl (Syntax.IHApp ())
 
-tyParen :: Type -> Type
-tyParen = Syntax.TyParen ()
 
 type Match = Syntax.Match ()
 
@@ -174,21 +159,16 @@ match n ps e = Syntax.Match () n ps (Syntax.UnGuardedRhs () e) Nothing
 
 type Module = Syntax.Module ()
 
-type ExportSpec = Syntax.ExportSpec ()
-
-module'
-    :: ModuleName
-    -> Maybe [ExportSpec]
-    -> [ModulePragma]
-    -> [Syntax.ImportDecl ()]
-    -> [Decl]
-    -> Module
-module' modName exports
+module' :: ModuleName -> [ModulePragma] -> [Syntax.ImportDecl ()] -> [Decl] -> Module
+module' modName
     = Syntax.Module ()
         (Just $ Syntax.ModuleHead () modName
                     -- no warning text
                     Nothing
-                    (Syntax.ExportSpecList () <$> exports))
+                    -- no explicit exports; we export everything.
+                    -- TODO: Also export public imports, taking care not to
+                    -- cause a name conflict between field accessors.
+                    Nothing)
 
 getModuleName :: Module -> Maybe ModuleName
 getModuleName (Syntax.Module _ (Just (Syntax.ModuleHead _ name _ _)) _ _ _)
@@ -203,26 +183,6 @@ languagePragma = Syntax.LanguagePragma ()
 
 optionsGhcPragma :: String -> ModulePragma
 optionsGhcPragma = Syntax.OptionsPragma () (Just Syntax.GHC)
-
-exportVar :: QName -> ExportSpec
-exportVar = Syntax.EVar ()
-
-exportAll :: QName -> ExportSpec
-#if MIN_VERSION_haskell_src_exts(1,18,0)
-exportAll q = Syntax.EThingWith () (Syntax.EWildcard () 0) q []
-#else
-exportAll = Syntax.EThingAll ()
-#endif
-
-exportWith :: QName -> [Name] -> ExportSpec
-#if MIN_VERSION_haskell_src_exts(1,18,0)
-exportWith q = Syntax.EThingWith ()
-                    (Syntax.NoWildcard ())
-                    q
-                    . map (Syntax.ConName ())
-#else
-exportWith q = Syntax.EThingWith () q . map (Syntax.ConName ())
-#endif
 
 type Name = Syntax.Name ()
 
