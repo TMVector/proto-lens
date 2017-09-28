@@ -53,7 +53,7 @@ library
         , proto-lens == 0.2.2.*
         , proto-lens-descriptors == 0.2.2.*
         , text == 1.2.*
-        , vector == 0.11.*
+        , vector == 0.12.*
     reexported-modules:
         -- Modules that are needed by the generated Haskell files.
         -- For forwards compatibility, reexport them as new module names so that
