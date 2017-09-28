@@ -9,7 +9,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 -- | Utility functions for parsing and encoding individual types.
-module Data.ProtoLens.Encoding.Bytes(
+module Data.ProtoLens.Vector.Encoding.Bytes(
     getVarInt,
     putVarInt,
     anyBits,

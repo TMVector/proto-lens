@@ -1,10 +1,10 @@
-name:                proto-lens-combinators
+name:                proto-lens-vector-combinators
 version:             0.1.0.8
-synopsis:            Utilities functions to proto-lens.
+synopsis:            Utilities functions to proto-lens-vector.
 description:
   Useful things for working with protos.
 
-homepage:            https://github.com/google/proto-lens
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Zie Weaver
@@ -19,15 +19,15 @@ extra-source-files:  Changelog.md
 custom-setup
   setup-depends: base >= 4.8 && < 4.11
                , Cabal
-               , proto-lens-protoc == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
 
 library
   default-language: Haskell2010
   hs-source-dirs: src
-  exposed-modules:     Data.ProtoLens.Combinators
-  build-depends:  proto-lens >= 0.1 && < 0.3
+  exposed-modules:     Data.ProtoLens.Vector.Combinators
+  build-depends:  proto-lens-vector >= 0.1 && < 0.3
                 -- Used by the custom Setup script (for the test-suite).
-                , proto-lens-protoc >= 0.1 && < 0.3
+                , proto-lens-vector-protoc >= 0.1 && < 0.3
                 , base >= 4.8 && < 4.11
                 , data-default-class >= 0.0 && < 0.2
                 , lens-family == 1.2.*
@@ -43,8 +43,8 @@ Test-Suite combinators_test
                , base
                , lens-family
                , lens-family-core
-               , proto-lens
-               , proto-lens-combinators
-               , proto-lens-protoc
+               , proto-lens-vector
+               , proto-lens-vector-combinators
+               , proto-lens-vector-protoc
                , test-framework
                , test-framework-hunit

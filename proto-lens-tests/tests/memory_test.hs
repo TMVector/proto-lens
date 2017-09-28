@@ -8,12 +8,12 @@ module Main where
 
 import Proto.Memory
 import Lens.Family2 ((&), (.~), (^.))
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Data.Monoid (mconcat, mempty, (<>))
 import qualified Data.Vector as V
 import Test.Framework.Providers.HUnit (testCase)
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defMemory :: Memory
 defMemory = def

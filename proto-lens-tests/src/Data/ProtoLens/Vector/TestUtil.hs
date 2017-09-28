@@ -5,7 +5,7 @@
 -- https://developers.google.com/open-source/licenses/bsd
 
 {-# LANGUAGE ScopedTypeVariables #-}
-module Data.ProtoLens.TestUtil(
+module Data.ProtoLens.Vector.TestUtil(
     testMain,
     Test,
     serializeTo,
@@ -32,8 +32,8 @@ module Data.ProtoLens.TestUtil(
     (PrettyPrint.$+$),
     ) where
 
-import Data.ProtoLens
-import Data.ProtoLens.Arbitrary
+import Data.ProtoLens.Vector
+import Data.ProtoLens.Vector.Arbitrary
 
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Builder as Builder
@@ -132,7 +132,7 @@ data Data
   | GroupEnd
 
 -- | Build the binary representation of a proto field.
--- Note that this code should be separate from anything in Data.ProtoLens.*,
+-- Note that this code should be separate from anything in Data.ProtoLens.Vector.*,
 -- so it can unit test the encoding code.
 tagged :: Word64 -> Data -> Builder.Builder
 tagged t (VarInt w) = varInt (t `shiftL` 3 .|. 0) <> varInt w

@@ -9,15 +9,15 @@ module Main where
 
 import Proto.Enum
 import Data.Function (on)
-import Data.ProtoLens
-import Data.ProtoLens.Arbitrary
+import Data.ProtoLens.Vector
+import Data.ProtoLens.Vector.Arbitrary
 import Lens.Family2 ((&), (.~), (^.))
 import Test.Framework (plusTestOptions, testGroup)
 import Test.Framework.Options (topt_timeout)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@?=))
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defFoo :: Foo
 defFoo = def

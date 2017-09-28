@@ -12,7 +12,7 @@ module Main where
 
 import Control.Arrow (second)
 import Proto.RawFields
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Lens.Family2 (Lens', (&), (.~))
 import Data.Int (Int32, Int64)
 import Data.Word (Word32, Word64)
@@ -25,7 +25,7 @@ import qualified Data.Text.Lazy as LT
 import Data.Text.Encoding (encodeUtf8)
 import Data.ByteString.Builder (Builder, byteString)
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 deserializeFails :: String -> Bad -> Test
 deserializeFails name bad = deserializeFrom name expected $ buildMessage bad

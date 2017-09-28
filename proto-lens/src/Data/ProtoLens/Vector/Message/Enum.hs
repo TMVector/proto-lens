@@ -42,7 +42,7 @@
 -- example makes the result equivalent @fromEnum BAZ2@ and the sequence now
 -- includes every enum value save @BAZ1@.  This is all despite the fact that
 -- @BAZ3@ was never referenced.
-module Data.ProtoLens.Message.Enum
+module Data.ProtoLens.Vector.Message.Enum
     ( messageEnumFrom
     , messageEnumFromTo
     , messageEnumFromThen

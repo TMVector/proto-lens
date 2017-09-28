@@ -8,12 +8,12 @@
 
 module Main where
 
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Data.Monoid ((<>))
 import Proto.Group
 import Lens.Family2 ((&), (.~))
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 main :: IO ()
 main = testMain

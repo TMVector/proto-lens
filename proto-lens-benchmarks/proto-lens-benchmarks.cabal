@@ -1,9 +1,9 @@
-name:                proto-lens-benchmarks
+name:                proto-lens-vector-benchmarks
 version:             0.1.0.0
-synopsis:            Benchmarks for proto-lens
+synopsis:            Benchmarks for proto-lens-vector
 description:
-    This package contains a set of benchmarks for proto-lens.
-homepage:            https://github.com/google/proto-lens
+    This package contains a set of benchmarks for proto-lens-vector.
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Aden Grue
@@ -17,14 +17,14 @@ extra-source-files:  benchmarks/*.proto
 custom-setup
   setup-depends: base >= 4.8 && < 4.11
                , Cabal
-               , proto-lens-protoc == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
 
 library
   hs-source-dirs: src
-  exposed-modules:     Data.ProtoLens.BenchmarkUtil
+  exposed-modules:     Data.ProtoLens.Vector.BenchmarkUtil
   default-language: Haskell2010
-  build-depends: proto-lens == 0.2.*
-               , proto-lens-protoc == 0.2.*
+  build-depends: proto-lens-vector == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
                , base >= 4.8 && < 4.11
                , bytestring == 0.10.*
                , criterion >= 1.1 && < 1.3
@@ -45,9 +45,9 @@ Benchmark int-packing
                  , criterion
                  , deepseq
                  , lens-family-core
-                 , proto-lens
-                 , proto-lens-benchmarks
-                 , proto-lens-protoc
+                 , proto-lens-vector
+                 , proto-lens-vector-benchmarks
+                 , proto-lens-vector-protoc
 
 Benchmark nested
     default-language: Haskell2010
@@ -60,9 +60,9 @@ Benchmark nested
                  , criterion
                  , deepseq
                  , lens-family-core
-                 , proto-lens
-                 , proto-lens-benchmarks
-                 , proto-lens-protoc
+                 , proto-lens-vector
+                 , proto-lens-vector-benchmarks
+                 , proto-lens-vector-protoc
                  , text
 
 Benchmark unused-fields
@@ -76,6 +76,6 @@ Benchmark unused-fields
                  , criterion
                  , deepseq
                  , lens-family
-                 , proto-lens
-                 , proto-lens-benchmarks
-                 , proto-lens-protoc
+                 , proto-lens-vector
+                 , proto-lens-vector-benchmarks
+                 , proto-lens-vector-protoc

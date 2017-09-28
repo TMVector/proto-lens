@@ -9,20 +9,20 @@
 -- https://developers.google.com/protocol-buffers/docs/encoding
 --
 -- These tests compare directly to byte sequences, rather than using
--- Data.ProtoLens.TestUtil.tagged, to sanity-check that tagged is implemented
+-- Data.ProtoLens.Vector.TestUtil.tagged, to sanity-check that tagged is implemented
 -- correctly.
 module Main where
 
 import Lens.Family2 ((&), (.~))
 import Proto.Canonical (Test1, Test2, Test3, Test4, a, b, c, d)
 import Test.Framework (testGroup)
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import qualified Data.ByteString as B
 import Data.ByteString.Builder (word8)
 import Data.Word (Word8)
 import qualified Data.Vector as V
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 main :: IO ()
 main = testMain

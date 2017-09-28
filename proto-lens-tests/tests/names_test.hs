@@ -12,7 +12,7 @@
 module Main where
 
 import Data.Int (Int32)
-import Data.ProtoLens (def, Message)
+import Data.ProtoLens.Vector (def, Message)
 import Lens.Family2 (Lens', (&), view, set)
 import Prelude hiding (Maybe, maybe, map, head, span)
 import qualified Prelude
@@ -21,7 +21,7 @@ import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 
 import Proto.Names
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
     ( TypedTest
     , readFrom
     , roundTripTest

@@ -14,13 +14,13 @@
 module Main (main) where
 
 import Data.Int (Int32)
-import Data.ProtoLens.BenchmarkUtil (protoBenchmark, benchmarkMain)
+import Data.ProtoLens.Vector.BenchmarkUtil (protoBenchmark, benchmarkMain)
 import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Criterion.Main (Benchmark)
 import Data.Text (Text)
 import Lens.Family ((&), (.~))
-import Data.ProtoLens.Message (def)
+import Data.ProtoLens.Vector.Message (def)
 import Proto.Nested
 
 -- These instances are required by Criterion to benchmark proto decoding.

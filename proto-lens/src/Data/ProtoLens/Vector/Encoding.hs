@@ -13,16 +13,16 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PatternGuards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Data.ProtoLens.Encoding(
+module Data.ProtoLens.Vector.Encoding(
     encodeMessage,
     buildMessage,
     decodeMessage,
     decodeMessageOrDie,
     ) where
 
-import Data.ProtoLens.Message
-import Data.ProtoLens.Encoding.Bytes
-import Data.ProtoLens.Encoding.Wire
+import Data.ProtoLens.Vector.Message
+import Data.ProtoLens.Vector.Encoding.Bytes
+import Data.ProtoLens.Vector.Encoding.Wire
 
 import Control.Applicative ((<|>))
 import Control.Monad (guard)

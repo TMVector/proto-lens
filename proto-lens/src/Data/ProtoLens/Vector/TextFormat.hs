@@ -9,7 +9,7 @@
 {-# LANGUAGE PatternGuards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Data.ProtoLens.TextFormat(
+module Data.ProtoLens.Vector.TextFormat(
     showMessage,
     showMessageShort,
     pprintMessage,
@@ -32,8 +32,8 @@ import Numeric (showOct)
 import Text.Parsec (parse)
 import Text.PrettyPrint
 
-import Data.ProtoLens.Message
-import qualified Data.ProtoLens.TextFormat.Parser as Parser
+import Data.ProtoLens.Vector.Message
+import qualified Data.ProtoLens.Vector.TextFormat.Parser as Parser
 
 -- TODO: This code is newer and missing some edge cases,
 -- including:

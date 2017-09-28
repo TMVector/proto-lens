@@ -6,7 +6,7 @@
 
 -- | Helper utilities to parse the human-readable text format into a
 -- proto-agnostic syntax tree.
-module Data.ProtoLens.TextFormat.Parser
+module Data.ProtoLens.Vector.TextFormat.Parser
     ( Message
     , Field(..)
     , Key(..)

@@ -6,12 +6,12 @@
 
 -- | The proto-lens package is a new implementation of protocol buffers in
 -- Haskell.
-module Data.ProtoLens (
-    module Data.ProtoLens.Encoding,
-    module Data.ProtoLens.Message,
-    module Data.ProtoLens.TextFormat,
+module Data.ProtoLens.Vector (
+    module Data.ProtoLens.Vector.Encoding,
+    module Data.ProtoLens.Vector.Message,
+    module Data.ProtoLens.Vector.TextFormat,
     ) where
 
-import Data.ProtoLens.Encoding
-import Data.ProtoLens.Message
-import Data.ProtoLens.TextFormat
+import Data.ProtoLens.Vector.Encoding
+import Data.ProtoLens.Vector.Message
+import Data.ProtoLens.Vector.TextFormat

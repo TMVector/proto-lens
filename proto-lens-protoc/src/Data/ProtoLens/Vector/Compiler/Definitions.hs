@@ -10,7 +10,7 @@
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Data.ProtoLens.Compiler.Definitions
+module Data.ProtoLens.Vector.Compiler.Definitions
     ( Env
     , Definition(..)
     , MessageInfo(..)
@@ -40,7 +40,7 @@ import Data.String (IsString(..))
 import Data.Text (Text, cons, splitOn, toLower, uncons, unpack)
 import qualified Data.Text as T
 import Lens.Family2 ((^.), (^..), toListOf)
-import Proto.Google.Protobuf.Descriptor
+import Proto.Google.Protobuf.Vector.Descriptor
     ( DescriptorProto
     , EnumDescriptorProto
     , EnumValueDescriptorProto
@@ -59,7 +59,7 @@ import Proto.Google.Protobuf.Descriptor
     , value
     )
 
-import Data.ProtoLens.Compiler.Combinators
+import Data.ProtoLens.Vector.Compiler.Combinators
     ( Name
     , QName
     , ModuleName

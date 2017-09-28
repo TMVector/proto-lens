@@ -8,7 +8,7 @@
 -- | An assorted collection of functions useful when working with ProtoLens
 -- protocol buffers.  These functions are inspired by functionality found in
 -- the protobuf implementation in other languages.
-module Data.ProtoLens.Combinators
+module Data.ProtoLens.Vector.Combinators
     ( has
     , clear
     , make

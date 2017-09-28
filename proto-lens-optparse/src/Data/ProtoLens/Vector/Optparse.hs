@@ -7,14 +7,14 @@
 -- | Adapting proto-lens to optparse-applicative ReadMs.
 -- This gives an easy way to define options and arguments for
 -- text-format protobuf types.
-module Data.ProtoLens.Optparse
+module Data.ProtoLens.Vector.Optparse
     ( proto
     , protoOption
     , protoArgument
     ) where
 
-import Data.ProtoLens.Message (Message)
-import Data.ProtoLens.TextFormat (readMessage)
+import Data.ProtoLens.Vector.Message (Message)
+import Data.ProtoLens.Vector.TextFormat (readMessage)
 import qualified Data.Text.Lazy as TL
 import Options.Applicative
   ( ArgumentFields

@@ -11,7 +11,7 @@ import qualified Data.ByteString
 import Data.Char (ord)
 import Data.Monoid ((<>))
 import qualified Data.Text.Lazy
-import Data.ProtoLens (
+import Data.ProtoLens.Vector (
     def, Message, showMessage, showMessageShort, pprintMessage)
 import qualified Data.Vector as V
 import Lens.Family2 ((&), (.~))
@@ -20,7 +20,7 @@ import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 import Text.PrettyPrint (renderStyle, style, lineLength)
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 def1 :: Test1
 def1 = def

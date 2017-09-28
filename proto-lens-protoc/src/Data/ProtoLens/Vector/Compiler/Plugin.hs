@@ -7,7 +7,7 @@
 -- Code for writing protocol compiler plugins.
 
 {-# LANGUAGE OverloadedStrings #-}
-module Data.ProtoLens.Compiler.Plugin
+module Data.ProtoLens.Vector.Compiler.Plugin
     ( ProtoFileName
     , ProtoFile(..)
     , analyzeProtoFiles
@@ -26,13 +26,13 @@ import Data.String (fromString)
 import qualified Data.Text as T
 import Data.Text (Text)
 import Lens.Family2
-import Proto.Google.Protobuf.Descriptor
+import Proto.Google.Protobuf.Vector.Descriptor
     (FileDescriptorProto, name, dependency, publicDependency)
 import System.FilePath (dropExtension, splitDirectories)
 
 
-import Data.ProtoLens.Compiler.Definitions
-import Data.ProtoLens.Compiler.Combinators (ModuleName, Name, QName)
+import Data.ProtoLens.Vector.Compiler.Definitions
+import Data.ProtoLens.Vector.Compiler.Combinators (ModuleName, Name, QName)
 
 -- | The filename of an input .proto file.
 type ProtoFileName = Text

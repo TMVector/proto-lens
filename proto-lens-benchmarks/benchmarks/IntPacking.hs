@@ -12,13 +12,13 @@
 -- unpacked integer data.
 module Main (main) where
 
-import Data.ProtoLens.BenchmarkUtil (protoBenchmark, benchmarkMain)
+import Data.ProtoLens.Vector.BenchmarkUtil (protoBenchmark, benchmarkMain)
 import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Criterion.Main (Benchmark)
 import Lens.Family ((&), (.~))
 import Data.Int (Int32)
-import Data.ProtoLens (def)
+import Data.ProtoLens.Vector (def)
 import Proto.IntPacking
 
 -- These instances are required by Criterion to benchmark proto decoding.

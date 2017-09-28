@@ -9,7 +9,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE StandaloneDeriving #-}
 -- | Datatypes for reflection of protocol buffer messages.
-module Data.ProtoLens.Message (
+module Data.ProtoLens.Vector.Message (
     -- * Reflection of Messages
     Message(..),
     Tag(..),

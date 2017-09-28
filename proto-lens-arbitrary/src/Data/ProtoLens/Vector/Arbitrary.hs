@@ -8,12 +8,12 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RankNTypes #-}
 -- | An Arbitrary instance for protocol buffer Messages to use with QuickCheck.
-module Data.ProtoLens.Arbitrary
+module Data.ProtoLens.Vector.Arbitrary
     ( ArbitraryMessage(..)
     , arbitraryMessage
     ) where
 
-import Data.ProtoLens.Message
+import Data.ProtoLens.Vector.Message
 
 import Control.Arrow ((&&&))
 import Control.Monad (foldM)

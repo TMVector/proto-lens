@@ -9,8 +9,8 @@ import qualified Lens.Family
 import Proto.Canonical (Test1, Test3)
 
 import Data.Default.Class (def)
-import Data.ProtoLens (build)
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector (build)
+import Data.ProtoLens.Vector.TestUtil
 import Test.HUnit ((@?=))
 import Test.Framework.Providers.HUnit (testCase)
 

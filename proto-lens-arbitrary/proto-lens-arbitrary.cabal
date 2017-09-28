@@ -1,11 +1,11 @@
-name:                proto-lens-arbitrary
+name:                proto-lens-vector-arbitrary
 version:             0.1.1.1
-synopsis:            Arbitrary instances for proto-lens.
+synopsis:            Arbitrary instances for proto-lens-vector.
 description:
-  The proto-lens-arbitrary allows generating arbitrary messages for
+  The proto-lens-vector-arbitrary allows generating arbitrary messages for
   use with QuickCheck.
 
-homepage:            https://github.com/google/proto-lens
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Aden Grue
@@ -18,8 +18,8 @@ extra-source-files:  Changelog.md
 
 library
   hs-source-dirs: src
-  exposed-modules:     Data.ProtoLens.Arbitrary
-  build-depends:  proto-lens >= 0.1 && < 0.3
+  exposed-modules:     Data.ProtoLens.Vector.Arbitrary
+  build-depends:  proto-lens-vector >= 0.1 && < 0.3
                 , base >= 4.8 && < 4.11
                 , bytestring == 0.10.*
                 , containers == 0.5.*

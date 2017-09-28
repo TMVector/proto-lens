@@ -2,12 +2,12 @@
 module Main (main) where
 
 import Proto.Oneof
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Lens.Family2 ((&), (.~), view)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defFoo :: Foo
 defFoo = def

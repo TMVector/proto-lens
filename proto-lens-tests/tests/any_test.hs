@@ -2,17 +2,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Main (main) where
 
-import Data.ProtoLens
-import Data.ProtoLens.Any
-import Data.ProtoLens.Arbitrary (ArbitraryMessage(..))
-import Proto.Google.Protobuf.Any (typeUrl, value)
+import Data.ProtoLens.Vector
+import Data.ProtoLens.Vector.Any
+import Data.ProtoLens.Vector.Arbitrary (ArbitraryMessage(..))
+import Proto.Google.Protobuf.Vector.Any (typeUrl, value)
 import Lens.Family2 ((&), (.~), (^.))
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 import qualified Data.Text as Text
 import Test.QuickCheck ((===), counterexample, listOf, elements)
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 import Proto.Any
 
 main :: IO ()

@@ -7,8 +7,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.ProtoLens (def)
-import Data.ProtoLens.Combinators
+import Data.ProtoLens.Vector (def)
+import Data.ProtoLens.Vector.Combinators
 import Lens.Family ((^.), (.~), (&))
 import Lens.Family.State ((.=), (<~), use, zoom)
 import Proto.Combinators

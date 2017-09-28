@@ -7,7 +7,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Lens.Family2 ((&), (.~), (^.))
 import qualified Data.ByteString.Builder as Builder
 import Data.Monoid ((<>))
@@ -36,7 +36,7 @@ import Test.Framework (testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 main :: IO ()
 main = testMain

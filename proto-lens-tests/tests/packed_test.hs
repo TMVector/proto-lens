@@ -8,10 +8,10 @@ module Main where
 
 import Proto.Packed
 import Lens.Family2 ((&), (.~))
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import qualified Data.Vector as V
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defFoo :: Foo
 defFoo = def

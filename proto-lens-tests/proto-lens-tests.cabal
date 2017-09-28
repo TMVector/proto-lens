@@ -1,13 +1,13 @@
-name:                proto-lens-tests
+name:                proto-lens-vector-tests
 version:             0.1.0.1
-synopsis:            Unit tests for proto-lens
+synopsis:            Unit tests for proto-lens-vector
 description:
-    This package contains a set of test suites for proto-lens.
-homepage:            https://github.com/google/proto-lens
+    This package contains a set of test suites for proto-lens-vector.
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Judah Jacobson
-maintainer:          proto-lens@googlegroups.com
+maintainer:          proto-lens-vector@googlegroups.com
 copyright:           Google Inc.
 category:            Data
 build-type:          Custom
@@ -17,21 +17,21 @@ extra-source-files: tests/*.proto
 custom-setup
   setup-depends: base >= 4.8 && < 4.11
                , Cabal
-               , proto-lens-protoc == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
 
 library
   hs-source-dirs: src
-  exposed-modules:     Data.ProtoLens.TestUtil
+  exposed-modules:     Data.ProtoLens.Vector.TestUtil
   default-language: Haskell2010
-  build-depends: proto-lens-arbitrary == 0.1.*
-               , proto-lens == 0.2.*
-               , proto-lens-protoc == 0.2.*
+  build-depends: proto-lens-vector-arbitrary == 0.1.*
+               , proto-lens-vector == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
                -- TODO: this is necessary to list explicitly here since when
                -- --enable-tests is off, Cabal won't see the test-suite
                -- `package-deps_test` that lists it, but we'll still try to
                -- compile tests/package-deps.proto (since it's listed in
                -- extra-source-files regardless).
-               , proto-lens-tests-dep
+               , proto-lens-vector-tests-dep
                , base >= 4.8 && < 4.11
                , bytestring == 0.10.*
                , text == 1.2.*
@@ -54,9 +54,9 @@ Test-Suite canonical_test
   build-depends: base
                , bytestring
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , vector
 
@@ -68,9 +68,9 @@ Test-Suite group_test
   other-modules: Proto.Group
   build-depends: base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
 
 Test-Suite map_test
@@ -82,9 +82,9 @@ Test-Suite map_test
   build-depends: base
                , bytestring
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
 
 Test-Suite oneof_test
@@ -97,9 +97,9 @@ Test-Suite oneof_test
                , bytestring
                , lens-family
                , HUnit
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
 
@@ -112,9 +112,9 @@ Test-Suite optional_test
   build-depends: HUnit
                , base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
 
@@ -128,9 +128,9 @@ Test-Suite proto3_test
                , base
                , bytestring
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
                , vector
@@ -144,9 +144,9 @@ Test-Suite repeated_test
   build-depends: base
                , bytestring
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , vector
 
@@ -161,9 +161,9 @@ Test-Suite text_format_test
                , bytestring
                , lens-family
                , pretty
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
                , text
@@ -182,10 +182,10 @@ Test-Suite enum_test
                , base
                , lens-family
                , pretty
-               , proto-lens
-               , proto-lens-arbitrary
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-arbitrary
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
                , test-framework-quickcheck2
@@ -198,9 +198,9 @@ Test-Suite memory_test
   other-modules: Proto.Packed
   build-depends: base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
                , text
@@ -215,9 +215,9 @@ Test-Suite names_test
   build-depends: HUnit
                , base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
 
@@ -229,9 +229,9 @@ Test-Suite no_package_test
   other-modules: Proto.NoPackage
   build-depends: base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , test-framework-hunit
                , HUnit
@@ -244,9 +244,9 @@ Test-Suite packed_test
   other-modules: Proto.Packed
   build-depends: base
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , text
                , vector
@@ -260,9 +260,9 @@ Test-Suite raw_fields_test
   build-depends: base
                , bytestring
                , lens-family
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , text
 
@@ -275,9 +275,9 @@ Test-Suite required_test
   build-depends: base
                , data-default-class
                , lens-family-core
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework
                , text
 
@@ -296,9 +296,9 @@ Test-Suite labels_test
                , lens-labels
                , lens-family
                , lens-family-core
-               , proto-lens
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework-hunit
 
 Test-Suite package-deps_test
@@ -310,10 +310,10 @@ Test-Suite package-deps_test
   build-depends: base
                , HUnit
                , lens-family
-               , proto-lens
-               , proto-lens-tests-dep
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-tests-dep
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , test-framework-hunit
 
 Test-Suite any_test
@@ -325,11 +325,11 @@ Test-Suite any_test
   build-depends: base
                , HUnit
                , lens-family
-               , proto-lens
-               , proto-lens-arbitrary
-               , proto-lens-protobuf-types
-               , proto-lens-protoc
-               , proto-lens-tests
+               , proto-lens-vector
+               , proto-lens-vector-arbitrary
+               , proto-lens-vector-protobuf-types
+               , proto-lens-vector-protoc
+               , proto-lens-vector-tests
                , QuickCheck
                , test-framework
                , test-framework-hunit

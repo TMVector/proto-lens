@@ -9,13 +9,13 @@ module Main where
 
 import Proto.Repeated
 import Test.Framework (testGroup)
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Lens.Family2 ((&), (.~))
 import Data.ByteString.Builder (byteString)
 import Data.Monoid ((<>))
 import qualified Data.Vector as V
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defFoo :: Foo
 defFoo = def

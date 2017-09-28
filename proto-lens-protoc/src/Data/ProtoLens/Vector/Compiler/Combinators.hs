@@ -16,8 +16,8 @@
 -- datatypes, with some intelligence about Haskell names.  For example, @"foo"
 -- :: Exp@ is treated as a variable and @"Foo" :: Exp@ is treated as a
 -- constructor.
-module Data.ProtoLens.Compiler.Combinators
-    ( module Data.ProtoLens.Compiler.Combinators
+module Data.ProtoLens.Vector.Compiler.Combinators
+    ( module Data.ProtoLens.Vector.Compiler.Combinators
     -- Since ImportDecl is a record type, for simplicity we just export it
     -- directly.
     , Syntax.ImportDecl(..)

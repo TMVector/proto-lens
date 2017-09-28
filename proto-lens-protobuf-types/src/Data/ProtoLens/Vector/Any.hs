@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Data.ProtoLens.Any
+module Data.ProtoLens.Vector.Any
     ( Any
     , pack
     , packWithPrefix
@@ -13,7 +13,7 @@ import Data.Monoid ((<>))
 import qualified Data.Text as Text
 import Data.Text (Text)
 import Data.Typeable (Typeable)
-import Data.ProtoLens
+import Data.ProtoLens.Vector
     ( decodeMessage
     , def
     , encodeMessage
@@ -21,7 +21,7 @@ import Data.ProtoLens
     , MessageDescriptor(..)
     )
 import Lens.Family2 ((&), (.~), (^.))
-import Proto.Google.Protobuf.Any
+import Proto.Google.Protobuf.Vector.Any
 
 -- | Packs the given message into an 'Any' using the default type URL prefix
 -- "type.googleapis.com".

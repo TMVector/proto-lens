@@ -1,11 +1,11 @@
 module Main where
 
-import Data.ProtoLens (def)
+import Data.ProtoLens.Vector (def)
 import Lens.Family2 ((&), (.~), (^.))
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 
-import Data.ProtoLens.TestUtil (Test, testMain)
+import Data.ProtoLens.Vector.TestUtil (Test, testMain)
 import Proto.PackageDeps (Bar, foo)
 import Proto.TestDep.Foo (value)
 

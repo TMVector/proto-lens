@@ -15,13 +15,13 @@
 -- produce more overhead when looking up fields in the descriptor.
 module Main where
 
-import Data.ProtoLens.BenchmarkUtil (protoBenchmark, benchmarkMain)
+import Data.ProtoLens.Vector.BenchmarkUtil (protoBenchmark, benchmarkMain)
 import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Criterion.Main (Benchmark)
 import Lens.Family2 ((&), (.~))
 import Data.Int (Int32)
-import Data.ProtoLens.Message (def)
+import Data.ProtoLens.Vector.Message (def)
 import Proto.UnusedFields
 
 -- These instances are required by Criterion to benchmark proto decoding.

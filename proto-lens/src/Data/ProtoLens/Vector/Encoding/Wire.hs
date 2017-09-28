@@ -8,7 +8,7 @@
 {-# LANGUAGE RankNTypes #-}
 -- | Module defining the individual base wire types (e.g. VarInt, Fixed64) and
 -- how to encode/decode them.
-module Data.ProtoLens.Encoding.Wire(
+module Data.ProtoLens.Vector.Encoding.Wire(
     WireType(..),
     SomeWireType(..),
     WireValue(..),
@@ -28,7 +28,7 @@ import Data.ByteString.Lazy.Builder as Builder
 import Data.Monoid ((<>))
 import Data.Word
 
-import Data.ProtoLens.Encoding.Bytes
+import Data.ProtoLens.Vector.Encoding.Bytes
 
 data WireType a where
     VarInt :: WireType Word64

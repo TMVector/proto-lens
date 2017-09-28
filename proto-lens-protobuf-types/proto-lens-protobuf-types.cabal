@@ -1,15 +1,15 @@
-name:                proto-lens-protobuf-types
+name:                proto-lens-vector-protobuf-types
 version:             0.2.2.0
 synopsis:            Basic protocol buffer message types.
 description:
     This package provides bindings standard protocol message types,
-    for use with the proto-lens library.
+    for use with the proto-lens-vector library.
 
-homepage:            https://github.com/google/proto-lens
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Judah Jacobson
-maintainer:          proto-lens@googlegroups.com
+maintainer:          proto-lens-vector@googlegroups.com
 copyright:           Google Inc.
 category:            Data
 build-type:          Custom
@@ -23,16 +23,16 @@ extra-source-files:
 custom-setup
   setup-depends: base >= 4.8 && < 4.11
                , Cabal
-               , proto-lens-protoc == 0.2.*
+               , proto-lens-vector-protoc == 0.2.*
 
 library
   hs-source-dirs:     src
-  exposed-modules:    Data.ProtoLens.Any
-                      Proto.Google.Protobuf.Any
-                      Proto.Google.Protobuf.Duration
-                      Proto.Google.Protobuf.Wrappers
+  exposed-modules:    Data.ProtoLens.Vector.Any
+                      Proto.Google.Protobuf.Vector.Any
+                      Proto.Google.Protobuf.Vector.Duration
+                      Proto.Google.Protobuf.Vector.Wrappers
   build-depends: base >= 4.8 && < 4.11
                , lens-family
-               , proto-lens >= 0.2.2 && < 0.3
-               , proto-lens-protoc >= 0.2.2 && < 0.3
+               , proto-lens-vector >= 0.2.2 && < 0.3
+               , proto-lens-vector-protoc >= 0.2.2 && < 0.3
                , text == 1.2.*

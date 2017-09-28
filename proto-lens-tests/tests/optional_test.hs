@@ -7,13 +7,13 @@
 module Main where
 
 import Proto.Optional
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Lens.Family2 ((&), (.~), (^.))
 import Test.Framework (testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))
 
-import Data.ProtoLens.TestUtil
+import Data.ProtoLens.Vector.TestUtil
 
 defFoo :: Foo
 defFoo = def

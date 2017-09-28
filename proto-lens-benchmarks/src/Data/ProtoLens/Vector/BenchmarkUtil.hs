@@ -8,14 +8,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 -- | A utility library for writing proto-lens benchmarks.
-module Data.ProtoLens.BenchmarkUtil (protoBenchmark, benchmarkMain) where
+module Data.ProtoLens.Vector.BenchmarkUtil (protoBenchmark, benchmarkMain) where
 
 import Control.DeepSeq (NFData)
 import Criterion.Main
 import qualified Criterion.Main.Options as Criterion
 import qualified Data.ByteString as BS (length)
 import Data.Maybe (fromMaybe)
-import Data.ProtoLens
+import Data.ProtoLens.Vector
 import Options.Applicative
 #if MIN_VERSION_optparse_applicative(0,13,0)
 import Data.Monoid ((<>))

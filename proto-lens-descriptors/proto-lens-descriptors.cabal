@@ -1,13 +1,13 @@
-name:                proto-lens-descriptors
+name:                proto-lens-vector-descriptors
 version:             0.2.2.0
 synopsis:            Protocol buffers for describing the definitions of messages.
 description:
-    This package provides definitions for the 'proto-lens' package
+    This package provides definitions for the 'proto-lens-vector' package
     of message types which describe @.proto@ files.
 license:             BSD3
 license-file:        LICENSE
 author:              Judah Jacobson
-maintainer:          proto-lens@googlegroups.com
+maintainer:          proto-lens-vector@googlegroups.com
 copyright:           Google Inc.
 category:            Data
 build-type:          Simple
@@ -17,8 +17,8 @@ extra-source-files:  Changelog.md
 library
   hs-source-dirs:      src
   exposed-modules:
-      Proto.Google.Protobuf.Compiler.Plugin
-      Proto.Google.Protobuf.Descriptor
+      Proto.Google.Protobuf.Vector.Compiler.Plugin
+      Proto.Google.Protobuf.Vector.Descriptor
   default-language:    Haskell2010
   build-depends:
       base >= 4.8 && < 4.11
@@ -27,7 +27,7 @@ library
     , data-default-class >= 0.0 && < 0.2
     , lens-family == 1.2.*
     , lens-labels == 0.1.*
-    -- Specify a more precise version of `proto-lens`, since it depends on
+    -- Specify a more precise version of `proto-lens-vector`, since it depends on
     -- the exact definition of the Message class.
-    , proto-lens == 0.2.2.*
+    , proto-lens-vector == 0.2.2.*
     , text == 1.2.*

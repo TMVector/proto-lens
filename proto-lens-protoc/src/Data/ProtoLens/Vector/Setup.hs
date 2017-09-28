@@ -14,7 +14,7 @@
 --
 -- See @README.md@ for instructions on how to use proto-lens with Cabal.
 {-# LANGUAGE CPP #-}
-module Data.ProtoLens.Setup
+module Data.ProtoLens.Vector.Setup
     ( defaultMainGeneratingProtos
     , defaultMainGeneratingSpecificProtos
     , generatingProtos
@@ -266,7 +266,7 @@ generateProtosWithImports
     -> IO ()
 generateProtosWithImports imports output files = do
     protoLensProtoc
-        <- findExecutableOrDie "proto-lens-protoc"
+        <- findExecutableOrDie "proto-lens-vector-protoc"
               $ "Please file a bug at "
                   ++ "https://github.com/google/proto-lens/issues ."
     protoc <- findExecutableOrDie "protoc"

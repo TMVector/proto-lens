@@ -7,7 +7,7 @@
 -- | This module builds the actual, generated Haskell file
 -- for a given input .proto file.
 {-# LANGUAGE OverloadedStrings #-}
-module Data.ProtoLens.Compiler.Generate(
+module Data.ProtoLens.Vector.Compiler.Generate(
     generateModule,
     fileSyntaxType,
     ModifyImports,
@@ -28,7 +28,7 @@ import Data.Text (unpack)
 import qualified Data.Text as T
 import Data.Tuple (swap)
 import Lens.Family2 ((^.))
-import Proto.Google.Protobuf.Descriptor
+import Proto.Google.Protobuf.Vector.Descriptor
     ( EnumValueDescriptorProto
     , FieldDescriptorProto
     , FieldDescriptorProto'Label(..)
@@ -47,8 +47,8 @@ import Proto.Google.Protobuf.Descriptor
     , typeName
     )
 
-import Data.ProtoLens.Compiler.Combinators
-import Data.ProtoLens.Compiler.Definitions
+import Data.ProtoLens.Vector.Compiler.Combinators
+import Data.ProtoLens.Vector.Compiler.Definitions
 
 data SyntaxType = Proto2 | Proto3
     deriving Eq
@@ -61,7 +61,7 @@ fileSyntaxType f = case f ^. syntax of
     s -> error $ "Unknown syntax type " ++ show s
 
 -- Whether to import the "Reexport" modules or the originals;
--- e.g., Data.ProtoLens.Reexport.Data.Map vs Data.Map.
+-- e.g., Data.ProtoLens.Vector.Reexport.Data.Map vs Data.Map.
 data UseReexport = UseReexport | UseOriginal
     deriving (Eq, Read)
 
@@ -87,7 +87,7 @@ generateModule modName imports syntaxType modifyImport definitions importedEnv
           ]
           (map (modifyImport . importSimple)
               [ "Prelude", "Data.Int", "Data.Word"
-              , "Data.ProtoLens", "Data.ProtoLens.Message.Enum"
+              , "Data.ProtoLens.Vector", "Data.ProtoLens.Vector.Message.Enum"
               , "Lens.Family2", "Lens.Family2.Unchecked", "Data.Default.Class"
               , "Data.Text",  "Data.Map" , "Data.ByteString", "Data.Vector"
               , "Lens.Labels"
@@ -137,7 +137,7 @@ reexported :: ModifyImports
 reexported imp@ImportDecl {importModule = m}
     = imp { importAs = Just m, importModule = m' }
   where
-    m' = fromString $ "Data.ProtoLens.Reexport." ++ prettyPrint m
+    m' = fromString $ "Data.ProtoLens.Vector.Reexport." ++ prettyPrint m
 
 generateMessageDecls :: SyntaxType -> Env QName -> T.Text -> MessageInfo Name -> [Decl]
 generateMessageDecls syntaxType env protoName info =
@@ -207,7 +207,7 @@ generateMessageDecls syntaxType env protoName info =
             ]
         ]
     -- instance Message.Message Bar where
-    , instDecl [] ("Data.ProtoLens.Message" `ihApp` [dataType])
+    , instDecl [] ("Data.ProtoLens.Vector.Message" `ihApp` [dataType])
         [[match "descriptor" [] $ descriptorExpr syntaxType env protoName info]]
     ]
   where
@@ -224,9 +224,9 @@ generateEnumDecls info =
     --   def = FirstEnumValue
     , instDecl [] ("Data.Default.Class.Default" `ihApp` [dataType])
         [[match "def" [] defaultCon]]
-    -- instance Data.ProtoLens.FieldDefault Foo where
+    -- instance Data.ProtoLens.Vector.FieldDefault Foo where
     --   fieldDefault = FirstEnumValue
-    , instDecl [] ("Data.ProtoLens.FieldDefault" `ihApp` [dataType])
+    , instDecl [] ("Data.ProtoLens.Vector.FieldDefault" `ihApp` [dataType])
         [[match "fieldDefault" [] defaultCon]]
     -- instance MessageEnum Foo where
     --    maybeToEnum 1 = Just Foo1
@@ -240,7 +240,7 @@ generateEnumDecls info =
     --    readEnum "Foo2" = Just Foo2
     --    ...
     --    readEnum _ = Nothing
-    , instDecl [] ("Data.ProtoLens.MessageEnum" `ihApp` [dataType])
+    , instDecl [] ("Data.ProtoLens.Vector.MessageEnum" `ihApp` [dataType])
         [
             [ match "maybeToEnum" [pLitInt k]
                 $ "Prelude.Just" @@ con (unQual n)
@@ -284,17 +284,17 @@ generateEnumDecls info =
     , instDecl [] ("Prelude.Enum" `ihApp` [dataType])
         [[match "toEnum" ["k__"]
                   $ "Prelude.maybe" @@ errorMessageExpr @@ "Prelude.id"
-                        @@ ("Data.ProtoLens.maybeToEnum" @@ "k__")]
+                        @@ ("Data.ProtoLens.Vector.maybeToEnum" @@ "k__")]
         , [ match "fromEnum" [pApp (unQual c) []] $ litInt k
           | (c, k) <- constructorNumbers
           ]
         , succDecl "succ" maxBoundName succPairs
         , succDecl "pred" minBoundName $ map swap succPairs
-        , alias "enumFrom" "Data.ProtoLens.Message.Enum.messageEnumFrom"
-        , alias "enumFromTo" "Data.ProtoLens.Message.Enum.messageEnumFromTo"
-        , alias "enumFromThen" "Data.ProtoLens.Message.Enum.messageEnumFromThen"
+        , alias "enumFrom" "Data.ProtoLens.Vector.Message.Enum.messageEnumFrom"
+        , alias "enumFromTo" "Data.ProtoLens.Vector.Message.Enum.messageEnumFromTo"
+        , alias "enumFromThen" "Data.ProtoLens.Vector.Message.Enum.messageEnumFromThen"
         , alias "enumFromThenTo"
-            "Data.ProtoLens.Message.Enum.messageEnumFromThenTo"
+            "Data.ProtoLens.Vector.Message.Enum.messageEnumFromThenTo"
         ]
     -- instance Bounded Foo where
     --    minBound = Foo1
@@ -466,7 +466,7 @@ plainRecordField syntaxType env f = case fd ^. label of
     listType = tyList baseType
     vectorType = "Data.Vector.Vector" @@ baseType
     rawAccessor = "Prelude.id"
-    maybeAccessor = "Data.ProtoLens.maybeLens"
+    maybeAccessor = "Data.ProtoLens.Vector.maybeLens"
                           @@ hsFieldValueDefault env fd
 
 
@@ -507,7 +507,7 @@ oneofRecordField env oneofInfo
                 , lensFieldType = baseType
                 , lensExp = "Prelude.."
                                 @@ oneofFieldAccessor c
-                                @@ ("Data.ProtoLens.maybeLens"
+                                @@ ("Data.ProtoLens.Vector.maybeLens"
                                               @@ hsFieldValueDefault env
                                                     (fieldDescriptor f))
                 }
@@ -585,7 +585,7 @@ hsFieldValueDefault env fd = case fd ^. type' of
         | otherwise -> errorMessage "enum"
     -- The rest of the cases are for scalar fields that have a fieldDefault
     -- instance.
-    _ | T.null def -> "Data.ProtoLens.fieldDefault"
+    _ | T.null def -> "Data.ProtoLens.Vector.fieldDefault"
     FieldDescriptorProto'TYPE_BOOL
         | def == "true" -> "Prelude.True"
         | def == "false" -> "Prelude.False"
@@ -674,7 +674,7 @@ descriptorExpr syntaxType env protoName m
     -- (Note that the two maps have the same elements but different keys.  We
     -- use the "let" expression to share elements between the two maps.)
     = let' (map (fieldDescriptorVarBind $ messageName m) $ fields)
-        $ "Data.ProtoLens.MessageDescriptor"
+        $ "Data.ProtoLens.Vector.MessageDescriptor"
           @@ ("Data.Text.pack" @@ stringExp (T.unpack protoName))
           @@ ("Data.Map.fromList" @@ list fieldsByTag)
           @@ ("Data.Map.fromList" @@ list fieldsByTextFormatName)
@@ -683,7 +683,7 @@ descriptorExpr syntaxType env protoName m
         [tuple
               [ t, fieldDescriptorVar f ]
               | f <- fields
-              , let t = "Data.ProtoLens.Tag"
+              , let t = "Data.ProtoLens.Vector.Tag"
                           @@ litInt (fromIntegral
                                       $ fieldDescriptor f ^. number)
               ]
@@ -720,19 +720,19 @@ textFormatFieldName env descr = case descr ^. type' of
 fieldDescriptorExpr :: SyntaxType -> Env QName -> Name -> FieldInfo
                     -> Exp
 fieldDescriptorExpr syntaxType env n f =
-    ("Data.ProtoLens.FieldDescriptor"
+    ("Data.ProtoLens.Vector.FieldDescriptor"
         -- Record the original .proto name for text format
         @@ stringExp (T.unpack $ textFormatFieldName env fd)
         -- Force the type signature since it can't be inferred for Map entry
         -- types.
         @@ (fieldTypeDescriptorExpr (fd ^. type')
                 @::@
-                    ("Data.ProtoLens.FieldTypeDescriptor"
+                    ("Data.ProtoLens.Vector.FieldTypeDescriptor"
                         @@ hsFieldType env fd))
         @@ fieldAccessorExpr syntaxType env f)
     -- TODO: why is this type sig needed?
     @::@
-    ("Data.ProtoLens.FieldDescriptor" @@ tyCon (unQual n))
+    ("Data.ProtoLens.Vector.FieldDescriptor" @@ tyCon (unQual n))
   where
     fd = fieldDescriptor f
 
@@ -743,20 +743,20 @@ fieldAccessorExpr syntaxType env f = accessorCon @@ var (unQual hsFieldName)
     fd = fieldDescriptor f
     accessorCon = case fd ^. label of
           FieldDescriptorProto'LABEL_REQUIRED
-              -> "Data.ProtoLens.PlainField" @@ "Data.ProtoLens.Required"
+              -> "Data.ProtoLens.Vector.PlainField" @@ "Data.ProtoLens.Vector.Required"
           FieldDescriptorProto'LABEL_OPTIONAL
               | isDefaultingOptional syntaxType fd
-                  -> "Data.ProtoLens.PlainField" @@ "Data.ProtoLens.Optional"
-              | otherwise -> "Data.ProtoLens.OptionalField"
+                  -> "Data.ProtoLens.Vector.PlainField" @@ "Data.ProtoLens.Vector.Optional"
+              | otherwise -> "Data.ProtoLens.Vector.OptionalField"
           FieldDescriptorProto'LABEL_REPEATED
               | Just (k, v) <- getMapFields env fd
-                  -> "Data.ProtoLens.MapField"
+                  -> "Data.ProtoLens.Vector.MapField"
                          @@ con (unQual $ nameFromSymbol $ overloadedField k)
                          @@ con (unQual $ nameFromSymbol $ overloadedField v)
-              | otherwise -> "Data.ProtoLens.RepeatedField'"
+              | otherwise -> "Data.ProtoLens.Vector.RepeatedField'"
                   @@ if isPackedField syntaxType fd
-                        then "Data.ProtoLens.Packed"
-                        else "Data.ProtoLens.Unpacked"
+                        then "Data.ProtoLens.Vector.Packed"
+                        else "Data.ProtoLens.Vector.Unpacked"
     hsFieldName
         = nameFromSymbol $ case fd ^. label of
               FieldDescriptorProto'LABEL_OPTIONAL
@@ -791,7 +791,7 @@ isPackedField s f = case f ^. options . maybe'packed of
 
 fieldTypeDescriptorExpr :: FieldDescriptorProto'Type -> Exp
 fieldTypeDescriptorExpr =
-    (\n -> fromString $ "Data.ProtoLens." ++ n ++ "Field") . \t -> case t of
+    (\n -> fromString $ "Data.ProtoLens.Vector." ++ n ++ "Field") . \t -> case t of
     FieldDescriptorProto'TYPE_DOUBLE -> "Double"
     FieldDescriptorProto'TYPE_FLOAT -> "Float"
     FieldDescriptorProto'TYPE_INT64 -> "Int64"

@@ -14,9 +14,9 @@ import Data.Monoid ((<>))
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import Data.Text (Text, pack)
-import Data.ProtoLens (decodeMessage, def, encodeMessage)
+import Data.ProtoLens.Vector (decodeMessage, def, encodeMessage)
 import Lens.Family2
-import Proto.Google.Protobuf.Compiler.Plugin
+import Proto.Google.Protobuf.Vector.Compiler.Plugin
     ( CodeGeneratorRequest
     , CodeGeneratorResponse
     , content
@@ -25,15 +25,15 @@ import Proto.Google.Protobuf.Compiler.Plugin
     , parameter
     , protoFile
     )
-import Proto.Google.Protobuf.Descriptor
+import Proto.Google.Protobuf.Vector.Descriptor
     (FileDescriptorProto, name, dependency)
 import System.Environment (getProgName)
 import System.Exit (exitWith, ExitCode(..))
 import System.IO as IO
 
-import Data.ProtoLens.Compiler.Combinators (prettyPrint)
-import Data.ProtoLens.Compiler.Generate
-import Data.ProtoLens.Compiler.Plugin
+import Data.ProtoLens.Vector.Compiler.Combinators (prettyPrint)
+import Data.ProtoLens.Vector.Compiler.Generate
+import Data.ProtoLens.Vector.Compiler.Plugin
 
 main :: IO ()
 main = do

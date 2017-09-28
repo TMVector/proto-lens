@@ -1,12 +1,12 @@
-name:                proto-lens-optparse
+name:                proto-lens-vector-optparse
 version:             0.1.0.4
-synopsis:            Adapting proto-lens to optparse-applicative ReadMs.
+synopsis:            Adapting proto-lens-vector to optparse-applicative ReadMs.
 description:
-   A package adapting proto-lens to optparse-applicative ReadMs.
+   A package adapting proto-lens-vector to optparse-applicative ReadMs.
    This gives an easy way to define options and arguments for
    text-format protobuf types.
 
-homepage:            https://github.com/google/proto-lens
+homepage:            https://github.com/google/proto-lens-vector
 license:             BSD3
 license-file:        LICENSE
 author:              Andrew Pritchard
@@ -19,8 +19,8 @@ extra-source-files:  Changelog.md
 
 library
   hs-source-dirs: src
-  exposed-modules:     Data.ProtoLens.Optparse
-  build-depends:  proto-lens >= 0.1 && < 0.3
+  exposed-modules:     Data.ProtoLens.Vector.Optparse
+  build-depends:  proto-lens-vector >= 0.1 && < 0.3
                 , base >= 4.8 && < 4.11
                 , optparse-applicative >= 0.12 && < 0.15
                 , text == 1.2.*
