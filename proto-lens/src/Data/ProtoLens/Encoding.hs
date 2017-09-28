@@ -35,6 +35,7 @@ import qualified Data.Map.Strict as Map
 import Data.ByteString.Lazy.Builder as Builder
 import qualified Data.ByteString.Lazy as L
 import Lens.Family2 (set, over, (^.), (&))
+import qualified Data.Vector as V
 
 -- TODO: We could be more incremental when parsing/encoding length-based fields,
 -- rather than forcing the whole thing.  E.g., for encoding we're doing extra
@@ -103,7 +104,17 @@ parseAndAddField
                         wv <- getWireValue fieldWt tag
                         x <- runEither $ get wv
                         return $! x
-              runEither $ parseOnly (manyReversedTill getElt endOfInput) val
+              case fieldWt of
+                  Fixed32 ->
+                      runEither $ V.generateM (B.length val `div` 4) $ \i -> do
+                          output <- parseOnly getElt $ B.take 4 $ B.drop (i * 4) val
+                          output `seq` return output
+                  Fixed64 ->
+                      runEither $ V.generateM (B.length val `div` 8) $ \i -> do
+                          output <- parseOnly getElt $ B.take 8 $ B.drop (i * 8) val
+                          output `seq` return output
+                  _ ->
+                      runEither $ V.fromList <$> parseOnly (Parse.manyTill' getElt endOfInput) val
           in case accessor of
               PlainField _ f -> do
                   !x <- getSimpleVal
@@ -121,7 +132,17 @@ parseAndAddField
                         return $! over f (\(!xs) -> x:xs) msg)
                 <|> (do 
                         xs <- getPackedVals
-                        return $! over f (\(!ys) -> xs++ys) msg)
+                        return $! over f (\(!ys) -> (reverse (V.toList xs))++ys) msg)
+                <|> fail ("Field " ++ name
+                            ++ "expects a repeated field wire type but found "
+                            ++ show wt)
+              RepeatedField' _ f
+                -> (do
+                        !x <- getSimpleVal
+                        return $! over f (\(!xs) -> flip V.snoc x xs) msg)
+                <|> (do 
+                        xs <- getPackedVals
+                        return $! over f (\(!ys) -> ys V.++ xs) msg)
                 <|> fail ("Field " ++ name
                             ++ "expects a repeated field wire type but found "
                             ++ show wt)
@@ -187,6 +208,8 @@ messageFieldToVals tag (FieldDescriptor _ typeDescriptor accessor) msg =
             -- seems to allow better list fusion.
             RepeatedField Unpacked f -> concatMap embed (msg ^. f)
             RepeatedField Packed f -> embedPacked (msg ^. f)
+            RepeatedField' Unpacked f -> concatMap embed (msg ^. f)
+            RepeatedField' Packed f -> embedPacked (V.toList (msg ^. f))
             MapField keyLens valueLens f ->
                 concatMap (\(k, v) -> embed $ def & set keyLens k & set valueLens v)
                     $ Map.toList (msg ^. f)

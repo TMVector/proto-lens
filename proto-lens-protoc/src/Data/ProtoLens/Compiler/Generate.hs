@@ -89,7 +89,7 @@ generateModule modName imports syntaxType modifyImport definitions importedEnv
               [ "Prelude", "Data.Int", "Data.Word"
               , "Data.ProtoLens", "Data.ProtoLens.Message.Enum"
               , "Lens.Family2", "Lens.Family2.Unchecked", "Data.Default.Class"
-              , "Data.Text",  "Data.Map" , "Data.ByteString"
+              , "Data.Text",  "Data.Map" , "Data.ByteString", "Data.Vector"
               , "Lens.Labels"
               ]
             ++ map importSimple imports)
@@ -451,10 +451,10 @@ plainRecordField syntaxType env f = case fd ^. label of
                        }]
         -- data Foo = Foo { _Foo_bar :: [Bar] }
         -- type instance Field "bar" Foo = [Bar]
-        | otherwise -> recordField listType
+        | otherwise -> recordField vectorType
                   [LensInstance
                       { lensSymbol = baseName
-                      , lensFieldType = listType
+                      , lensFieldType = vectorType
                       , lensExp = rawAccessor
                       }]
   where
@@ -464,6 +464,7 @@ plainRecordField syntaxType env f = case fd ^. label of
     baseType = hsFieldType env fd
     maybeType = "Prelude.Maybe" @@ baseType
     listType = tyList baseType
+    vectorType = "Data.Vector.Vector" @@ baseType
     rawAccessor = "Prelude.id"
     maybeAccessor = "Data.ProtoLens.maybeLens"
                           @@ hsFieldValueDefault env fd
@@ -566,7 +567,7 @@ hsFieldDefault syntaxType env fd
               | otherwise -> "Prelude.Nothing"
           FieldDescriptorProto'LABEL_REPEATED
               | Just _ <- getMapFields env fd -> "Data.Map.empty"
-              | otherwise -> list []
+              | otherwise -> "Data.Vector.empty"
           -- TODO: More sensible initialization of required fields.
           FieldDescriptorProto'LABEL_REQUIRED -> hsFieldValueDefault env fd
 
@@ -752,7 +753,7 @@ fieldAccessorExpr syntaxType env f = accessorCon @@ var (unQual hsFieldName)
                   -> "Data.ProtoLens.MapField"
                          @@ con (unQual $ nameFromSymbol $ overloadedField k)
                          @@ con (unQual $ nameFromSymbol $ overloadedField v)
-              | otherwise -> "Data.ProtoLens.RepeatedField"
+              | otherwise -> "Data.ProtoLens.RepeatedField'"
                   @@ if isPackedField syntaxType fd
                         then "Data.ProtoLens.Packed"
                         else "Data.ProtoLens.Unpacked"

@@ -13,6 +13,7 @@ import Data.Monoid ((<>))
 import qualified Data.Text.Lazy
 import Data.ProtoLens (
     def, Message, showMessage, showMessageShort, pprintMessage)
+import qualified Data.Vector as V
 import Lens.Family2 ((&), (.~))
 import Proto.TextFormat
 import Test.Framework.Providers.HUnit (testCase)
@@ -39,7 +40,7 @@ main = testMain
     , readFrom "string concat" (Just $ def1 & b .~ "abcdef")
           "b: \"a\"\"bcd\" \n   \"ef\""
     , readFrom "bad char" failed1 "a: 5="
-    , readFrom "same line" (Just $ def1 & d .~ [1, 2, 3])
+    , readFrom "same line" (Just $ def1 & d .~ V.fromList [1, 2, 3])
           "d: 1 d: 2    d: 3   "
     , readFrom "int field" (Just $ def1 & a .~ 5) "4: 5"
     , readFrom "bad int field" failed1 "1: 5"
@@ -52,10 +53,10 @@ main = testMain
     -- sure the test case still fails when they are.
     , readFrom "empty extension" failed1 "[]: 5"
     , testCase "Render same line" $
-        "d: 1 d: 2 d: 3" @=? showMessage (def1 & d .~ [1, 2, 3])
+        "d: 1 d: 2 d: 3" @=? showMessage (def1 & d .~ V.fromList [1, 2, 3])
     , testCase "Render multiple lines" $
         "d: 1\nd: 2\nd: 3" @=?
-            showMessageWithLineLength 3 (def1 & d .~ [1, 2, 3])
+            showMessageWithLineLength 3 (def1 & d .~ V.fromList [1, 2, 3])
     , testCase "Field order" $
         "b: \"xyz\" d: 1 d: 2 a: 3" @=?
             showMessage (def1 & b .~ "xyz"
@@ -86,7 +87,7 @@ main = testMain
     , let kNums = [0..99]  -- The default line limit is 100 so we exceed it.
           kExpected = unwords $ map (("d: " ++) . show) kNums
       in testCase "Render single line for debugString" $
-          kExpected @=? showMessageShort (def1 & d .~ kNums)
+          kExpected @=? showMessageShort (def1 & d .~ V.fromList kNums)
     ]
   where
     escapeMessage  = def1 & b

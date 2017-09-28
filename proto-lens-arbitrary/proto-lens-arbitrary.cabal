@@ -25,4 +25,4 @@ library
                 , containers == 0.5.*
                 , text == 1.2.*
                 , lens-family == 1.2.*
-                , QuickCheck >= 2.8 && < 2.11
+                , vector == 0.11.*

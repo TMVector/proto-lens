@@ -53,6 +53,7 @@ library
         , proto-lens == 0.2.2.*
         , proto-lens-descriptors == 0.2.2.*
         , text == 1.2.*
+        , vector == 0.11.*
     reexported-modules:
         -- Modules that are needed by the generated Haskell files.
         -- For forwards compatibility, reexport them as new module names so that
@@ -70,6 +71,7 @@ library
         , Lens.Family2 as Data.ProtoLens.Reexport.Lens.Family2
         , Lens.Family2.Unchecked as Data.ProtoLens.Reexport.Lens.Family2.Unchecked
         , Lens.Labels as Data.ProtoLens.Reexport.Lens.Labels
+        , Data.Vector as Data.ProtoLens.Reexport.Data.Vector
     }
 
 executable proto-lens-protoc

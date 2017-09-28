@@ -9,6 +9,7 @@ module Main where
 import Proto.Packed
 import Lens.Family2 ((&), (.~))
 import Data.ProtoLens
+import qualified Data.Vector as V
 
 import Data.ProtoLens.TestUtil
 
@@ -19,11 +20,11 @@ main :: IO ()
 main = testMain
     [ serializeTo "default" defFoo mempty mempty
     , serializeTo "unpacked"
-          (defFoo & a .~ [1..3])
+          (defFoo & a .~ V.fromList [1..3])
           (vcat [keyedInt "a" x | x <- [1..3]])
           $ mconcat [tagged 1 $ VarInt x | x <- [1..3]]
     , serializeTo "packed"
-          (defFoo & b .~ [1..3])
+          (defFoo & b .~ V.fromList [1..3])
           (vcat [keyedInt "b" x | x <- [1..3]])
           $ tagged 2 $ Lengthy $ mconcat [varInt x | x <- [1..3]]
     , deserializeFrom "unpacked-as-packed"
