@@ -28,9 +28,9 @@ custom-setup
 library
   hs-source-dirs:     src
   exposed-modules:    Data.ProtoLens.Vector.Any
-                      Proto.Google.Protobuf.Vector.Any
-                      Proto.Google.Protobuf.Vector.Duration
-                      Proto.Google.Protobuf.Vector.Wrappers
+                      Proto.Vector.Google.Protobuf.Any
+                      Proto.Vector.Google.Protobuf.Duration
+                      Proto.Vector.Google.Protobuf.Wrappers
   build-depends: base >= 4.8 && < 4.11
                , lens-family
                , proto-lens-vector >= 0.2.2 && < 0.3

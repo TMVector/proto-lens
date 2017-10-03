@@ -21,7 +21,7 @@ import Data.ProtoLens.Vector
     , MessageDescriptor(..)
     )
 import Lens.Family2 ((&), (.~), (^.))
-import Proto.Google.Protobuf.Vector.Any
+import Proto.Vector.Google.Protobuf.Any
 
 -- | Packs the given message into an 'Any' using the default type URL prefix
 -- "type.googleapis.com".

@@ -26,7 +26,7 @@ import Data.String (fromString)
 import qualified Data.Text as T
 import Data.Text (Text)
 import Lens.Family2
-import Proto.Google.Protobuf.Vector.Descriptor
+import Proto.Vector.Google.Protobuf.Descriptor
     (FileDescriptorProto, name, dependency, publicDependency)
 import System.FilePath (dropExtension, splitDirectories)
 

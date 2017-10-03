@@ -17,8 +17,8 @@ extra-source-files:  Changelog.md
 library
   hs-source-dirs:      src
   exposed-modules:
-      Proto.Google.Protobuf.Vector.Compiler.Plugin
-      Proto.Google.Protobuf.Vector.Descriptor
+      Proto.Vector.Google.Protobuf.Compiler.Plugin
+      Proto.Vector.Google.Protobuf.Descriptor
   default-language:    Haskell2010
   build-depends:
       base >= 4.8 && < 4.11

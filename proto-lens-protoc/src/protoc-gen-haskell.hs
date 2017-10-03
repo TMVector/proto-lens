@@ -16,7 +16,7 @@ import qualified Data.Text as T
 import Data.Text (Text, pack)
 import Data.ProtoLens.Vector (decodeMessage, def, encodeMessage)
 import Lens.Family2
-import Proto.Google.Protobuf.Vector.Compiler.Plugin
+import Proto.Vector.Google.Protobuf.Compiler.Plugin
     ( CodeGeneratorRequest
     , CodeGeneratorResponse
     , content
@@ -25,7 +25,7 @@ import Proto.Google.Protobuf.Vector.Compiler.Plugin
     , parameter
     , protoFile
     )
-import Proto.Google.Protobuf.Vector.Descriptor
+import Proto.Vector.Google.Protobuf.Descriptor
     (FileDescriptorProto, name, dependency)
 import System.Environment (getProgName)
 import System.Exit (exitWith, ExitCode(..))
@@ -65,7 +65,7 @@ makeResponse prog request = let
 generateFiles :: ModifyImports -> (FileDescriptorProto -> Text)
               -> [FileDescriptorProto] -> [ProtoFileName] -> [(Text, Text)]
 generateFiles modifyImports header files toGenerate = let
-  modulePrefix = "Proto"
+  modulePrefix = "Proto.Vector"
   filesByName = analyzeProtoFiles modulePrefix files
   -- The contents of the generated Haskell file for a given .proto file.
   buildFile f = let

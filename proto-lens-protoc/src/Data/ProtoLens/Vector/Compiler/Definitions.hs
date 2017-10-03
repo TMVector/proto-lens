@@ -40,7 +40,7 @@ import Data.String (IsString(..))
 import Data.Text (Text, cons, splitOn, toLower, uncons, unpack)
 import qualified Data.Text as T
 import Lens.Family2 ((^.), (^..), toListOf)
-import Proto.Google.Protobuf.Vector.Descriptor
+import Proto.Vector.Google.Protobuf.Descriptor
     ( DescriptorProto
     , EnumDescriptorProto
     , EnumValueDescriptorProto

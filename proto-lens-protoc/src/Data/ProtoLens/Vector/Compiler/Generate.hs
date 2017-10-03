@@ -28,7 +28,7 @@ import Data.Text (unpack)
 import qualified Data.Text as T
 import Data.Tuple (swap)
 import Lens.Family2 ((^.))
-import Proto.Google.Protobuf.Vector.Descriptor
+import Proto.Vector.Google.Protobuf.Descriptor
     ( EnumValueDescriptorProto
     , FieldDescriptorProto
     , FieldDescriptorProto'Label(..)

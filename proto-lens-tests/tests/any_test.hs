@@ -5,7 +5,7 @@ module Main (main) where
 import Data.ProtoLens.Vector
 import Data.ProtoLens.Vector.Any
 import Data.ProtoLens.Vector.Arbitrary (ArbitraryMessage(..))
-import Proto.Google.Protobuf.Vector.Any (typeUrl, value)
+import Proto.Vector.Google.Protobuf.Any (typeUrl, value)
 import Lens.Family2 ((&), (.~), (^.))
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit ((@=?))

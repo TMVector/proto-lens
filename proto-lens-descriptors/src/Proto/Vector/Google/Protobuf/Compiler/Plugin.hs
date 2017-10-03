@@ -4,7 +4,7 @@
   FlexibleInstances, PatternSynonyms, MagicHash, NoImplicitPrelude
   #-}
 {-# OPTIONS_GHC -fno-warn-unused-imports #-}
-module Proto.Google.Protobuf.Vector.Compiler.Plugin where
+module Proto.Vector.Google.Protobuf.Compiler.Plugin where
 import qualified Prelude
 import qualified Data.Int
 import qualified Data.Word
@@ -17,14 +17,14 @@ import qualified Data.Text
 import qualified Data.Map
 import qualified Data.ByteString
 import qualified Lens.Labels
-import qualified Proto.Google.Protobuf.Vector.Descriptor
+import qualified Proto.Vector.Google.Protobuf.Descriptor
 
 data CodeGeneratorRequest = CodeGeneratorRequest{_CodeGeneratorRequest'fileToGenerate
                                                  :: ![Data.Text.Text],
                                                  _CodeGeneratorRequest'parameter ::
                                                  !(Prelude.Maybe Data.Text.Text),
                                                  _CodeGeneratorRequest'protoFile ::
-                                                 ![Proto.Google.Protobuf.Vector.Descriptor.FileDescriptorProto]}
+                                                 ![Proto.Vector.Google.Protobuf.Descriptor.FileDescriptorProto]}
                           deriving (Prelude.Show, Prelude.Eq, Prelude.Ord)
 
 instance (a ~ [Data.Text.Text], b ~ [Data.Text.Text],
@@ -58,8 +58,8 @@ instance (a ~ Prelude.Maybe Data.Text.Text,
               Prelude.id
 
 instance (a ~
-            [Proto.Google.Protobuf.Vector.Descriptor.FileDescriptorProto],
-          b ~ [Proto.Google.Protobuf.Vector.Descriptor.FileDescriptorProto],
+            [Proto.Vector.Google.Protobuf.Descriptor.FileDescriptorProto],
+          b ~ [Proto.Vector.Google.Protobuf.Descriptor.FileDescriptorProto],
           Prelude.Functor f) =>
          Lens.Labels.HasLens "protoFile" f CodeGeneratorRequest
          CodeGeneratorRequest a b where
@@ -94,7 +94,7 @@ instance Data.ProtoLens.Vector.Message CodeGeneratorRequest where
                   = Data.ProtoLens.Vector.FieldDescriptor "proto_file"
                       (Data.ProtoLens.Vector.MessageField ::
                          Data.ProtoLens.Vector.FieldTypeDescriptor
-                           Proto.Google.Protobuf.Vector.Descriptor.FileDescriptorProto)
+                           Proto.Vector.Google.Protobuf.Descriptor.FileDescriptorProto)
                       (Data.ProtoLens.Vector.RepeatedField Data.ProtoLens.Vector.Unpacked protoFile)
                       :: Data.ProtoLens.Vector.FieldDescriptor CodeGeneratorRequest
               in
